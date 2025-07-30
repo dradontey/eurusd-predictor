@@ -16,7 +16,13 @@ df = yf.download('EURUSD=X', start=start_date.strftime('%Y-%m-%d'), end=end_date
 df = df[['Close']].rename(columns={'Close':'close'}).dropna()
 df.index = pd.to_datetime(df.index)
 
-st.caption(f"数据范围：{df.index[0].date()} ~ {df.index[-1].date()}，共 {len(df)} 天")
+if df.empty:
+    st.error("❌ 没有获取到 EUR/USD 历史数据，请检查 yfinance 是否正常")
+else:
+    st.caption(f"数据范围：{df.index[0].date()} ~ {df.index[-1].date()}，共 {len(df)} 天")
+
+    # 接下来继续：计算均线、信号、收益等...
+
 
 # 计算短期/长期均线
 df['ma10'] = df['close'].rolling(window=10).mean()
